@@ -4,8 +4,8 @@ import os
 import motor
 import motor.motor_asyncio
 from Utils.mongo import get_module_configuration
-
-class WelcomeCog(commands.Cog):
+from Utils.client import Cog
+class WelcomeCog(Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
         self.mongo_uri = os.getenv("MONGO_URI")
