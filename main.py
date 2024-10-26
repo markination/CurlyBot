@@ -1,3 +1,6 @@
+# Im Bored, Wise Words:
+# An idiot admires complexity, a genius admires simplicity
+
 import dotenv
 dotenv.load_dotenv()
 import sys
@@ -9,17 +12,16 @@ import asyncio
 import dotenv
 from cogwatch import watch
 from typing import Literal, Optional
-
+from motor.motor_asyncio import AsyncIOMotorClient
 dotenv.load_dotenv()
 
 TOKEN = os.getenv(os.getenv("env"))
 intents = discord.Intents.all()
 
 
-
-
-class bot(commands.AutoSharded):
+class bot(commands.AutoShardedBot):
     def __init__(self):
+        self.mongo = AsyncIOMotorClient(os.getenv("MONGO_URI"))
         super().__init__(command_prefix='!!', intents=intents)
 
     @watch(path='Cogs', preload=True)

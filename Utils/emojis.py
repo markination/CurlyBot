@@ -49,3 +49,15 @@ class Emojis():
     @property
     def appeals_emoji(self):
         return "<:appeals:1263573976555327571>"
+    
+    @property
+    def permissions_emoji(self):
+        return "<:permissions:1298694082465501316>"
+    
+    @property
+    def welcome_emoji(self):
+        return "<:welcome:1298737151483056181>"
+    
+    @property
+    def verification_emoji(self):
+        return "<:verification:1299457703663636633>"

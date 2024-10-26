@@ -1,27 +1,5 @@
 import json, discord
 
-def convert_embed(embed_data, replacements):
-    try:
-        
-        for key, value in replacements.items():
-            embed_data = recursively_replace(embed_data, key, value)
-        
-        embed_list = []
-        for embed_data_item in embed_data.get("embeds", []):
-            if isinstance(embed_data_item, dict):
-                embed = discord.Embed.from_dict(embed_data_item)
-                embed_list.append(embed)
-            else:
-                print("Invalid embed data format:", embed_data_item)
-        
-        return embed_list
-    except FileNotFoundError:
-        print("File not found.")
-        return []
-    except json.JSONDecodeError:
-        print("Invalid JSON format.")
-        return []
-
 def recursively_replace(obj, key, value):
     if isinstance(obj, str):
         return obj.replace(key, value)
@@ -32,3 +10,9 @@ def recursively_replace(obj, key, value):
     else:
         return obj
     
+def clean_input(input_value):
+    """
+    Strips whitespace from the input value and returns None if it's empty.
+    """
+    stripped_value = input_value.strip() if input_value else ""
+    return None if not stripped_value else stripped_value
