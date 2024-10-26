@@ -315,17 +315,39 @@ class WelcomeEmbedCreation(discord.ui.View):
         
 
 
-class VerificationChannel(discord.ui.RoleSelect):
+class VerificationPanelChannel(discord.ui.RoleSelect):
     def __init__(self, mongo_connection, ctx):
         self.ctx = ctx
         self.mongo = mongo_connection
-        super().__init__(placeholder="Select a verification channel", max_values=3, min_values=1, row=1)
+        super().__init__(placeholder="Select the channel for your verification panel", max_values=3, min_values=1, row=1)
 
     async def callback(self, interaction: discord.Interaction):
         if self.ctx.author.id != interaction.user.id:
             embed = discord.Embed(description="This is not your panel!", color=discord.Color.dark_embed())
             embed.set_author(icon_url=interaction.user.display_avatar.url)
             return await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.defer()
+        channel_id = self.values[0]
+        module = get_module_configuration(self.mongo, "VerifyModule")
+        db = self.mongo["Curly"]["Config"]
+        await db.update_one(module, {"$set": {"VerifyModule.panel_channel_id": channel_id}})
+        return
+class VerificationLogChannel(discord.ui.RoleSelect):
+    def __init__(self, mongo_connection, ctx):
+        self.ctx = ctx
+        self.mongo = mongo_connection
+        super().__init__(placeholder="Select the channel for your verification logs", max_values=3, min_values=1, row=1)
+
+    async def callback(self, interaction: discord.Interaction):
+        if self.ctx.author.id != interaction.user.id:
+            embed = discord.Embed(description="This is not your panel!", color=discord.Color.dark_embed())
+            embed.set_author(icon_url=interaction.user.display_avatar.url)
+            return await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.defer()
+        channel_id = self.values[0]
+        module = get_module_configuration(self.mongo, "VerifyModule")
+        db = self.mongo["Curly"]["Config"]
+        await db.update_one(module, {"$set": {"VerifyModule.log_channeL_id": channel_id}})
         return
 
 
@@ -341,6 +363,11 @@ class VerifiedRole(discord.ui.RoleSelect):
             embed = discord.Embed(description="This is not your panel!", color=discord.Color.dark_embed())
             embed.set_author(icon_url=interaction.user.display_avatar.url)
             return await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.defer()
+        role_id = self.values[0]
+        module = get_module_configuration(self.mongo, "VerifyModule")
+        db = self.mongo["Curly"]["Config"]
+        await db.update_one(module, {"$set": {"VerifyModule.verified_role_id": role_id}})
         return
 
 class UnverifiedRole(discord.ui.RoleSelect):
@@ -355,8 +382,12 @@ class UnverifiedRole(discord.ui.RoleSelect):
             embed = discord.Embed(description="This is not your panel!", color=discord.Color.dark_embed())
             embed.set_author(icon_url=interaction.user.display_avatar.url)
             return await interaction.response.send_message(embed=embed, ephemeral=True)
-        return
-    
+        await interaction.response.defer()
+        role_id = self.values[0]
+        module = get_module_configuration(self.mongo, "VerifyModule")
+        db = self.mongo["Curly"]["Config"]
+        await db.update_one(module, {"$set": {"VerifyModule.unverified_role_id": role_id}})
+        return    
 class PermissionsView(discord.ui.View):
     def __init__(self, ctx,mongo_connection, message):
         super().__init__(timeout=None)
